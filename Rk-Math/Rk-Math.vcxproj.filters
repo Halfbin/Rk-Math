@@ -1,15 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\Include\Rk\Clamp.hpp" />
-    <ClInclude Include="..\Include\Rk\Lerp.hpp" />
-    <ClInclude Include="..\Include\Rk\Matrix.hpp" />
-    <ClInclude Include="..\Include\Rk\MatrixForward.hpp" />
-    <ClInclude Include="..\Include\Rk\Vector.hpp" />
-    <ClInclude Include="..\Include\Rk\Vector2.hpp" />
-    <ClInclude Include="..\Include\Rk\Vector3.hpp" />
-    <ClInclude Include="..\Include\Rk\Vector4.hpp" />
-    <ClInclude Include="..\Include\Rk\VectorBase.hpp" />
-    <ClInclude Include="..\Include\Rk\Versor.hpp" />
+    <ClInclude Include="..\Include\Rk\clamp.hpp" />
+    <ClInclude Include="..\Include\Rk\lerp.hpp" />
+    <ClInclude Include="..\Include\Rk\matrix.hpp" />
+    <ClInclude Include="..\Include\Rk\vector.hpp" />
+    <ClInclude Include="..\Include\Rk\versor.hpp" />
+    <ClInclude Include="..\Include\Rk\transform.hpp" />
   </ItemGroup>
 </Project>

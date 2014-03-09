@@ -11,14 +11,17 @@
 
 #pragma once
 
-#include <Rk/Matrix.hpp>
+#include <type_traits>
 
-namespace RkTest
+namespace Rk
 {
-  extern "C" int main ()
+  template <typename at, typename bt, typename tt, typename = typename std::enable_if <
+    std::is_scalar <at>::value &&
+    std::is_scalar <bt>::value &&
+    std::is_floating_point <tt>::value >::type>
+  auto lerp (at a, bt b, tt t)
   {
-
-    return 0;
+    return a + (b - a) * t;
   }
 
 }

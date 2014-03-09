@@ -11,30 +11,14 @@
 
 #pragma once
 
-#include <type_traits>
-
 namespace Rk
 {
-  template <typename F>
-  auto lerp (F a, F b, F t)
-    -> typename std::enable_if <
-      std::is_floating_point <F>::value, F
-    >::type
+  template <typename t>
+  t clamp (t x, t low, t high)
   {
-    return a + (b - a) * t;
-  }
-
-  template <typename T, typename F>
-  T lerp (const T& a, const T& b, F t)
-  {
-    return a * (F (1) - t) + b * t;
-  }
-
-  // Normalized Linear Interpolation
-  template <typename T, typename F>
-  T nlerp (const T& a, const T& b, F t)
-  {
-    return abs (t * b + (F (1) - t) * a);
+    if      (x < low)  return low;
+    else if (x > high) return high;
+    else               return x;
   }
 
 }

@@ -11,16 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\Rk\Clamp.hpp" />
-    <ClInclude Include="..\Include\Rk\Lerp.hpp" />
-    <ClInclude Include="..\Include\Rk\Matrix.hpp" />
-    <ClInclude Include="..\Include\Rk\MatrixForward.hpp" />
-    <ClInclude Include="..\Include\Rk\Versor.hpp" />
-    <ClInclude Include="..\Include\Rk\Vector.hpp" />
-    <ClInclude Include="..\Include\Rk\Vector2.hpp" />
-    <ClInclude Include="..\Include\Rk\Vector3.hpp" />
-    <ClInclude Include="..\Include\Rk\Vector4.hpp" />
-    <ClInclude Include="..\Include\Rk\VectorBase.hpp" />
+    <ClInclude Include="..\Include\Rk\clamp.hpp" />
+    <ClInclude Include="..\Include\Rk\lerp.hpp" />
+    <ClInclude Include="..\Include\Rk\matrix.hpp" />
+    <ClInclude Include="..\Include\Rk\transform.hpp" />
+    <ClInclude Include="..\Include\Rk\versor.hpp" />
+    <ClInclude Include="..\Include\Rk\vector.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{75D16917-A5D2-4F65-AA79-5C7BF63025A8}</ProjectGuid>
@@ -28,17 +24,17 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>CTP_Nov2013</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>CTP_Nov2013</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
