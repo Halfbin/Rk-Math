@@ -12,6 +12,7 @@
 #pragma once
 
 #include <type_traits>
+#include <complex>
 
 namespace Rk
 {
@@ -22,6 +23,22 @@ namespace Rk
   auto lerp (at a, bt b, tt t)
   {
     return a + (b - a) * t;
+  }
+
+  template <typename at, typename bt, typename tt, typename = typename std::enable_if <
+    std::is_floating_point <tt>::value >::type>
+  auto lerp (std::complex <at> a, std::complex <bt> b, tt t)
+  {
+    return a * (1 - t) + b * t;
+  }
+
+  template <typename ct>
+  auto unit (std::complex <ct> z)
+  {
+    auto len = abs (z);
+    if (len > 0)
+      z /= len
+    return z;
   }
 
 }
