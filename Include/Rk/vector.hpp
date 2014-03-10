@@ -13,6 +13,7 @@
 
 #include <Rk/type_traits.hpp>
 #include <Rk/types.hpp>
+#include <Rk/lerp.hpp>
 
 #include <initializer_list>
 #include <functional>
@@ -537,7 +538,7 @@ namespace Rk
 
   // Linear interpolate
   template <uint n, typename lht, typename rht, typename tt, typename = typename detail::fp_en <tt>::type>
-  auto lerp (vector <n, lht> lhs, vector <n, rht>, tt t)
+  auto lerp (vector <n, lht> lhs, vector <n, rht> rhs, tt t)
   {
     return transform ([t] (lht x, rht y) { return lerp (x, y, t); }, lhs, rhs);
   }

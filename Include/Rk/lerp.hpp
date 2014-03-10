@@ -21,6 +21,7 @@ namespace Rk
     std::is_scalar <bt>::value &&
     std::is_floating_point <tt>::value >::type>
   auto lerp (at a, bt b, tt t)
+    -> std::common_type_t <at, bt, tt>
   {
     return a + (b - a) * t;
   }
