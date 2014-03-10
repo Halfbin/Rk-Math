@@ -125,7 +125,10 @@ namespace Rk
   template <typename ct>
   auto unit (versor <ct> v)
   {
-    return v * (1 / abs (v));
+    auto len = abs (v);
+    if (len > 0)
+      v *= 1 / len;
+    return v;
   }
 
   template <typename ct>

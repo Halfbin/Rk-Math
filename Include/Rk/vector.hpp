@@ -512,7 +512,10 @@ namespace Rk
   template <uint n, typename ct>
   auto unit (vector <n, ct> v)
   {
-    return v / abs (v);
+    auto len = abs (v);
+    if (len > 0)
+      v *= 1 / len;
+    return v;
   }
 
 /*template <uint n, typename ct>
