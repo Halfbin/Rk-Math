@@ -38,7 +38,7 @@ namespace Rk
   {
     auto len = abs (z);
     if (len > 0)
-      z /= len
+      z /= len;
     return z;
   }
 
