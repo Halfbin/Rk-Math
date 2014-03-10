@@ -179,7 +179,7 @@ namespace Rk
 
   // Linear Interpolation
   template <typename at, typename bt, typename tt>
-  auto lerp (versor <at> a, versor <bt>& b, tt alpha)
+  auto lerp (versor <at> a, versor <bt> b, tt t)
   {
     return make_versor {
       lerp (a.w, b.w, t),
