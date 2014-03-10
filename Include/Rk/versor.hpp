@@ -47,7 +47,7 @@ namespace Rk
   template <typename ct>
   auto make_versor (ct w, ct x, ct y, ct z)
   {
-    return versor <T> (w, x, y, z);
+    return versor <ct> (w, x, y, z);
   }
 
   // Versor from a given rotation
