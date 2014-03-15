@@ -68,7 +68,7 @@ namespace Rk
     static matrix identity_impl ()
     {
       static_assert (is_square, "Identity is not defined for non-square matrices");
-      return generate ([] (uint i, uint j) { return (i == j) ? 1 : 0; });
+      return generate ([] (uint i, uint j) { return (i == j) ? et (1) : et (0); });
     }
 
   public:
