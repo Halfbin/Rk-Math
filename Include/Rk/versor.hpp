@@ -197,9 +197,16 @@ namespace Rk
   template <typename ct, typename vt>
   auto conj (versor <ct> rot, vector3 <vt> vec)
   {
-    auto ijk = make_vector { rot.x, rot.y, rot.z };
-    auto t = cross (ijk, vec) * 2;
-    return vec + ver.w * t + cross (ijk, t);
+    auto r = make_vector { rot.x, rot.y, rot.z };
+    auto t = 2 * cross (r, vec);
+    return vec + rot.w * t + cross (r, t);
+  }
+
+  // Conjugate of versor
+  template <typename ct>
+  auto conj (versor <ct> rot)
+  {
+    return versor <ct> { rot.w, -rot.x, -rot.y, -rot.z };
   }
 
   namespace versor_types

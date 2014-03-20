@@ -40,7 +40,7 @@ namespace Rk
   template <typename ct>
   auto world_to_eye (vector3 <ct> pos, versor <ct> ori)
   {
-    auto rm = to_matrix (ori);
+    auto rm = to_matrix (Rk::conj (ori));
     auto np = -pos;
 
     auto i = -rm.row (1),
