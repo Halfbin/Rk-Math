@@ -62,7 +62,7 @@ namespace Rk
 
     t h   = 1 / std::tan (fov * pi_over_360),
       w   = h / asp,
-      nrd = 1 / (zf - zn),
+      nrd = 1 / (zn - zf),
       q   =  (zf + zn)  * nrd,
       qn  = 2 * zn * zf * nrd;
 
