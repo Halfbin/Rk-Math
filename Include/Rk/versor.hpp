@@ -154,24 +154,23 @@ namespace Rk
   template <typename ct>
   matrix <3, 3, ct> versor <ct>::to_matrix () const
   {
-    auto ww = w * w,
-         xx = x * x,
+    auto xx = x * x,
+         xy = x * y,
+         xz = x * z,
+
          yy = y * y,
+         yz = y * z,
+         
          zz = z * z,
 
-         xy = x * y,
-         wz = w * z,
-
-         xz = x * z,
+         wx = w * x,
          wy = w * y,
-
-         yz = y * z,
-         wx = w * x;
-
+         wz = w * z;
+         
     return matrix_rows {
-      make_vector { ww + xx - yy - zz,   2 * (xy - wz),     2 * (xz + wy)   },
-      make_vector {   2 * (xy + wz),   ww - xx + yy - zz,   2 * (yz - wx)   },
-      make_vector {   2 * (xz - wy),     2 * (yz + wx),   ww - xx - yy + zz }
+      make_vector { 1 - 2 * (yy + zz),   2 * (xy - wz),     2 * (xz + wy)   },
+      make_vector {   2 * (xy + wz),   1 - 2 * (xx + zz),   2 * (yz - wx)   },
+      make_vector {   2 * (xz - wy),     2 * (yz + wx),   1 - 2 * (xx + yy) }
     };
   }
 
