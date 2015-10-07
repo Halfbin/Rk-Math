@@ -11,14 +11,12 @@
 
 #pragma once
 
-namespace Rk
-{
+namespace Rk {
   template <typename t>
-  t clamp (t x, t low, t high)
-  {
+  t clamp (t x, t low, t high) {
     if      (x < low)  return low;
     else if (x > high) return high;
     else               return x;
   }
-
 }
+

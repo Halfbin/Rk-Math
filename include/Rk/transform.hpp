@@ -14,19 +14,16 @@
 #include <Rk/matrix.hpp>
 #include <Rk/versor.hpp>
 
-namespace Rk
-{
+namespace Rk {
   template <typename ct>
-  auto translation (vector3 <ct> v)
-  {
+  auto translation (vector3 <ct> v) {
     auto result = matrix <4, 4, ct>::identity ();
     result.set_column (3, compose_vector { v, 1 });
     return result;
   }
 
   template <typename ct>
-  auto affine (vector3 <ct> trn, versor <ct> rot)
-  {
+  auto affine (vector3 <ct> trn, versor <ct> rot) {
     auto rmat = to_matrix (rot);
 
     return matrix_rows {
@@ -38,8 +35,7 @@ namespace Rk
   }
 
   template <typename ct>
-  auto world_to_eye (vector3 <ct> pos, versor <ct> ori)
-  {
+  auto world_to_eye (vector3 <ct> pos, versor <ct> ori) {
     auto rm = to_matrix (Rk::conj (ori));
     auto np = -pos;
 
@@ -56,8 +52,7 @@ namespace Rk
   }
 
   template <typename t>
-  auto eye_to_clip (t fov, t asp, t zn, t zf)
-  {
+  auto eye_to_clip (t fov, t asp, t zn, t zf) {
     auto pi_over_360 = 3.14159265358979323846 / 360;
 
     t h   = 1 / std::tan (fov * pi_over_360),
@@ -75,13 +70,12 @@ namespace Rk
   }
 
   template <typename t>
-  auto ui_to_clip (t w, t h)
-  {
+  auto ui_to_clip (t w, t h) {
     return matrix_rows {
       make_vector { 2 / w,    0,   -1 },
       make_vector {   0,   -2 / h,  1 },
       make_vector {   0,      0,    1 }
     };
   }
-
 }
+

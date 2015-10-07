@@ -16,11 +16,9 @@
 
 #include <array>
 
-namespace Rk
-{
+namespace Rk {
   template <uint m, uint n, typename et>
-  class matrix
-  {
+  class matrix {
     static_assert (!std::is_reference <et>::value, "matrix elements must not be references");
     static_assert (std::is_scalar <et>::value,     "matrix elements must be scalar");
 
@@ -33,20 +31,17 @@ namespace Rk
     std::array <row_t, m> rows;
 
   /*template <uint... idxs>
-    auto row_impl (uint i, detail::idx_seq <idxs...>) const
-    {
+    auto row_impl (uint i, detail::idx_seq <idxs...>) const {
       return make_vector { rows [i][idxs]... };
     }*/
 
     template <uint... idxs>
-    auto col_impl (uint j, detail::idx_seq <idxs...>) const
-    {
+    auto col_impl (uint j, detail::idx_seq <idxs...>) const {
       return make_vector { rows [idxs][j]... };
     }
 
   /*template <uint... idxs>
-    auto set_row_impl (uint i, row_t v, detail::idx_seq <idxs...>)
-    {
+    auto set_row_impl (uint i, row_t v, detail::idx_seq <idxs...>) {
       typedef char sequence [n + 1];
       sequence { 0,
         (void (elements [i][idxs] = v [idxs]), 0)
@@ -55,8 +50,7 @@ namespace Rk
     }*/
 
     template <uint... idxs>
-    auto set_col_impl (uint j, col_t v, detail::idx_seq <idxs...>)
-    {
+    auto set_col_impl (uint j, col_t v, detail::idx_seq <idxs...>) {
       typedef char sequence [m + 1];
       sequence { 0,
         (void (rows [idxs][j] = v [idxs]), 0)
@@ -65,8 +59,7 @@ namespace Rk
     }
 
     template <bool is_square = m == n>
-    static matrix identity_impl ()
-    {
+    static matrix identity_impl () {
       static_assert (is_square, "Identity is not defined for non-square matrices");
       return generate ([] (uint i, uint j) { return (i == j) ? et (1) : et (0); });
     }
@@ -82,7 +75,7 @@ namespace Rk
     static zero_to_n_t zero_to_n () { return zero_to_n_t (); }
     static one_to_n_t  one_to_n  () { return one_to_n_t  (); }
 
-    matrix () { }
+    matrix () = default;
 
     template <uint n, typename ct, typename... cts>
     explicit matrix (vector <n, ct> first_row, vector <n, cts>... new_rows) :
@@ -90,8 +83,7 @@ namespace Rk
     { }
 
     template <typename ft>
-    static matrix generate (ft f)
-    {
+    static matrix generate (ft f) {
       matrix result;
       for (uint i = 0; i != m; i++)
       for (uint j = 0; j != n; j++)
@@ -99,64 +91,52 @@ namespace Rk
       return result;
     }
 
-    static matrix identity ()
-    {
+    static matrix identity () {
       return identity_impl <> ();
     }
 
-    et& operator () (uint i, uint j)
-    {
+    et& operator () (uint i, uint j) {
       return rows [i][j];
     }
 
-    et operator () (uint i, uint j) const
-    {
+    et operator () (uint i, uint j) const {
       return rows [i][j];
     }
 
-    et& at (uint i, uint j)
-    {
+    et& at (uint i, uint j) {
       if (i >= m || j >= n) throw std::out_of_range ("matrix index out-of-range");
       return rows [i][j];
     }
 
-    et at (uint i, uint j) const
-    {
+    et at (uint i, uint j) const {
       if (i >= m || j >= n) throw std::out_of_range ("matrix index out-of-range");
       return rows [i][j];
     }
 
-    row_t row (uint i) const
-    {
+    row_t row (uint i) const {
       return rows [i]; //row_impl (i, zero_to_n ());
     }
 
-    col_t col (uint j) const
-    {
+    col_t col (uint j) const {
       return col_impl (j, zero_to_m ());
     }
 
-    void set_row (uint i, row_t v)
-    {
+    void set_row (uint i, row_t v) {
       rows [i] = v; //set_row_impl (i, v, zero_to_n ());
     }
 
-    void set_col (uint j, col_t v)
-    {
+    void set_col (uint j, col_t v) {
       set_col_impl (j, v, zero_to_m ());
     }
-
   };
 
   template <uint n, typename... cts>
-  auto matrix_rows (vector <n, cts>&&... rows)
-  {
+  auto matrix_rows (vector <n, cts>&&... rows) {
     return matrix <sizeof... (rows), n, std::common_type_t <cts...>> { rows... };
   }
 
   template <uint m, uint n, uint p, typename lht, typename rht>
-  auto operator * (const matrix <m, n, lht>& lhs, const matrix <n, p, rht>& rhs)
-  {
+  auto operator * (const matrix <m, n, lht>& lhs, const matrix <n, p, rht>& rhs) {
     matrix <m, p, product_t <lht, rht>> result;
     for (uint i = 0; i != m; i++)
     for (uint j = 0; j != p; j++)
@@ -165,43 +145,35 @@ namespace Rk
   }
 
   template <uint m, uint n, uint p, typename lht, typename rht>
-  auto operator *= (matrix <m, n, lht>& lhs, const matrix <n, p, rht>& rhs)
-  {
+  auto operator *= (matrix <m, n, lht>& lhs, const matrix <n, p, rht>& rhs) {
     lhs = lhs * rhs;
   };
 
-  namespace detail
-  {
+  namespace detail {
     template <uint m, uint n, typename lht, typename rht, uint... idxs>
-    auto mul_cvec_impl (const matrix <m, n, lht>& lhs, vector <n, rht> rhs, idx_seq <idxs...>)
-    {
+    auto mul_cvec_impl (const matrix <m, n, lht>& lhs, vector <n, rht> rhs, idx_seq <idxs...>) {
       return make_vector { dot (lhs.row (idxs), rhs)... };
     }
 
     template <uint m, uint n, typename lht, typename rht, uint... idxs>
-    auto mul_rvec_impl (vector <m, lht> lhs, const matrix <m, n, rht>& rhs, idx_seq <idxs...>)
-    {
+    auto mul_rvec_impl (vector <m, lht> lhs, const matrix <m, n, rht>& rhs, idx_seq <idxs...>) {
       return make_vector { dot (lhs, rhs.col (idxs))... };
     }
-
   }
 
   template <uint m, uint n, typename lht, typename rht>
-  auto operator * (const matrix <m, n, lht>& lhs, vector <n, rht> rhs)
-  {
+  auto operator * (const matrix <m, n, lht>& lhs, vector <n, rht> rhs) {
     using namespace detail;
     return mul_cvec_impl (lhs, rhs, lhs.zero_to_m ());
   }
 
   template <uint m, uint n, typename lht, typename rht>
-  auto operator * (vector <m, lht> lhs, const matrix <m, n, rht>& rhs)
-  {
+  auto operator * (vector <m, lht> lhs, const matrix <m, n, rht>& rhs) {
     using namespace detail;
     return mul_rvec_impl (lhs, rhs, rhs.zero_to_n ());
   }
 
-  namespace matrix_types
-  {
+  namespace matrix_types {
     typedef matrix <2, 2, float> matrix2f, mat2f, m2f;
     typedef matrix <3, 3, float> matrix3f, mat3f, m3f;
     typedef matrix <4, 4, float> matrix4f, mat4f, m4f;
@@ -222,13 +194,12 @@ namespace Rk
     typedef matrix <3, 4, double> matrix3x4d, mat3x4d, m34d;
     typedef matrix <4, 2, double> matrix4x2d, mat4x2d, m42d;
     typedef matrix <4, 3, double> matrix4x3d, mat4x3d, m43d;
-
   }
 
   using namespace matrix_types;
-
 }
 
 #ifndef RK_MATRIX_NO_GLOBAL
 using namespace Rk::matrix_types;
 #endif
+
