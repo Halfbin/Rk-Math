@@ -439,10 +439,21 @@ namespace Rk {
     return reduce (std::plus <> (), lhs * rhs);
   }
 
+  // Length squared (faster than length; monotonic)
+  template <uint n, typename ct>
+  auto abs2 (vector <n, ct> v) {
+    return dot (v, v);
+  }
+
+  template <uint n, typename ct>
+  auto length2 (vector <n, ct> v) {
+    return abs2 (v);
+  }
+
   // Length
   template <uint n, typename ct>
   auto abs (vector <n, ct> v) {
-    return std::sqrt (dot (v, v));
+    return std::sqrt (abs2 (v));
   }
 
   template <uint n, typename ct>
