@@ -252,12 +252,12 @@ namespace Rk {
 
     template <uint n, typename vt, uint m, typename ut, uint... v_idxs, uint... u_idxs>
     auto vector_cat (vector <n, vt> v, vector <m, ut> u, idx_seq <v_idxs...>, idx_seq <u_idxs...>) {
-      return make_vector { v [v_idxs]..., u [u_idxs]... };
+      return make_vector (v [v_idxs]..., u [u_idxs]...);
     }
 
     template <uint n, typename ct, typename t, uint... idxs>
     auto vector_cat (vector <n, ct> v, t x, idx_seq <idxs...>) {
-      return make_vector { v [idxs]..., x };
+      return make_vector (v [idxs]..., x);
     }
 
     template <uint n, typename ct, uint m>
@@ -272,35 +272,35 @@ namespace Rk {
 
     template <uint n, typename ct, uint m, typename ut, typename... ts>
     auto compose_impl (vector <n, ct> v, vector <m, ut> u, ts... xs) {
-      return compose_impl { vector_cat (v, u, v.zero_to_n (), u.zero_to_n ()), xs... };
+      return compose_impl (vector_cat (v, u, v.zero_to_n (), u.zero_to_n ()), xs...);
     }
 
     template <uint n, typename ct, typename t, typename... ts>
     auto compose_impl (vector <n, ct> v, t x, ts... xs) {
-      return compose_impl { vector_cat (v, x, v.zero_to_n ()), xs... };
+      return compose_impl (vector_cat (v, x, v.zero_to_n ()), xs...);
     }
 
-    template <typename t, typename... ts, typename = typename scalar_en <t>::type>
+    template <typename t, typename... ts, typename en_t = typename scalar_en <t>::type>
     auto compose_impl (t x, ts... xs) {
-      return compose_impl { vector <1, t> { x }, xs... };
+      return compose_impl (vector <1, t> { x }, xs...);
     }
   }
 
   template <typename... xts>
   auto compose_vector (xts... xs) {
-    return detail::compose_impl { xs... };
+    return detail::compose_impl (xs...);
   }
 
   // Detail
   namespace detail {
     template <typename ft, uint n, typename lht, typename rht, uint... idxs>
     auto transform_impl (ft f, vector <n, lht> lhs, vector <n, rht> rhs, idx_seq <idxs...>) {
-      return make_vector { f (lhs [idxs], rhs [idxs]) ... };
+      return make_vector (f (lhs [idxs], rhs [idxs]) ...);
     }
 
     template <typename ft, uint n, typename ct, uint... idxs>
     auto transform_impl (ft f, vector <n, ct> v, idx_seq <idxs...>) {
-      return make_vector { f (v [idxs]) ... };
+      return make_vector (f (v [idxs]) ...);
     }
 
     template <typename ft, uint n, typename ct, uint... idxs>
@@ -467,11 +467,11 @@ namespace Rk {
   // Cross product
   template <typename lht, typename rht>
   auto cross (vector <3, lht> lhs, vector <3, rht> rhs) {
-    return make_vector {
+    return make_vector (
       lhs.y * rhs.z - lhs.z * rhs.y,
       lhs.z * rhs.x - lhs.x * rhs.z,
       lhs.x * rhs.y - lhs.y * rhs.x
-    };
+    );
   }
 
   // Linear interpolate
@@ -509,7 +509,7 @@ namespace Rk {
 
   template <uint n, typename ct, typename... sw_ts>
   auto swizzle (vector <n, ct> v, uint i, uint j, sw_ts... sws) {
-    return swizzle (v, make_vector_as <uint> { i, j, sws... });
+    return swizzle (v, make_vector_as <uint> (i, j, sws...));
   }
 
   template <uint n, typename ct>
