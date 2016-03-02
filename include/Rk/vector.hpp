@@ -240,6 +240,16 @@ namespace Rk {
   }
 
   namespace detail {
+    template <typename st, typename rt = void>
+    struct scalar_en :
+      std::enable_if <std::is_scalar <st>::value, rt>
+    { };
+
+    template <typename st, typename rt = void>
+    struct fp_en :
+      std::enable_if <std::is_floating_point <st>::value, rt>
+    { };
+
     template <uint n, typename vt, uint m, typename ut, uint... v_idxs, uint... u_idxs>
     auto vector_cat (vector <n, vt> v, vector <m, ut> u, idx_seq <v_idxs...>, idx_seq <u_idxs...>) {
       return make_vector { v [v_idxs]..., u [u_idxs]... };
@@ -304,16 +314,6 @@ namespace Rk {
       };
       return accum;
     }
-
-    template <typename st, typename rt = void>
-    struct scalar_en :
-      std::enable_if <std::is_scalar <st>::value, rt>
-    { };
-
-    template <typename st, typename rt = void>
-    struct fp_en :
-      std::enable_if <std::is_floating_point <st>::value, rt>
-    { };
   }
 
   template <typename ft, uint n, typename lht, typename rht>
