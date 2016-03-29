@@ -308,7 +308,7 @@ namespace Rk {
       typedef std::result_of_t <ft (ct, ct)> rt;
       rt accum = v [0];
       typedef char sequence [sizeof... (idxs) + 1];
-      sequence { '\0', // sequencing trick
+      (void) sequence { '\0', // sequencing trick
         (void (accum = f (accum, v [idxs])), '\0')
         ...
       };
