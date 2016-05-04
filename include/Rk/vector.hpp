@@ -110,10 +110,10 @@ namespace Rk {
     template <typename... sw_ts>
     auto swizzle (sw_ts&&... sws) const;
 
-    template <typename... sw_ts>
-    auto operator () (sw_ts&&... sws) const {
-      return swizzle (std::forward <sw_ts> (sws)...);
-    }
+    // template <typename... sw_ts>
+    // auto operator () (sw_ts&&... sws) const {
+    //   return swizzle (std::forward <sw_ts> (sws)...);
+    // }
   };
 
   template <uint n, typename ct>
