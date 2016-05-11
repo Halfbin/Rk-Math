@@ -123,14 +123,14 @@ namespace Rk {
   public:
     std::array <ct, n> components;
 
-    vector () = default;
+    constexpr vector () = default;
 
     template <typename t>
-    vector (const vector <n, t>& other) :
+    constexpr vector (const vector <n, t>& other) :
       components (other.components)
     { }
 
-    vector (nil_t) :
+    constexpr vector (nil_t) :
       components { }
     { }
 
@@ -152,18 +152,18 @@ namespace Rk {
       struct { ct x, y; };
     };
 
-    vector () = default;
+    constexpr vector () = default;
 
-    vector (nil_t) :
+    constexpr vector (nil_t) :
       x (0), y (0)
     { }
 
     template <typename t>
-    vector (const vector <2, t>& other) :
+    constexpr vector (const vector <2, t>& other) :
       x ((ct) other.x), y ((ct) other.y)
     { }
 
-    vector (ct nx, ct ny) :
+    constexpr vector (ct nx, ct ny) :
       x (nx), y (ny)
     { }
   };
@@ -178,18 +178,18 @@ namespace Rk {
       struct { ct x, y, z; };
     };
 
-    vector () = default;
+    constexpr vector () = default;
 
-    vector (nil_t) :
+    constexpr vector (nil_t) :
       x (0), y (0), z (0)
     { }
 
     template <typename t>
-    vector (const vector <3, t>& other) :
+    constexpr vector (const vector <3, t>& other) :
       x ((ct) other.x), y ((ct) other.y), z ((ct) other.z)
     { }
 
-    vector (ct nx, ct ny, ct nz) :
+    constexpr vector (ct nx, ct ny, ct nz) :
       x (nx), y (ny), z (nz)
     { }
   };
@@ -204,18 +204,18 @@ namespace Rk {
       struct { ct x, y, z, w; };
     };
 
-    vector () = default;
+    constexpr vector () = default;
 
-    vector (nil_t) :
+    constexpr vector (nil_t) :
       x (0), y (0), z (0), w (0)
     { }
 
     template <typename t>
-    vector (const vector <4, t>& other) :
+    constexpr vector (const vector <4, t>& other) :
       x ((ct) other.x), y ((ct) other.y), z ((ct) other.z), w ((ct) other.w)
     { }
 
-    vector (ct nx, ct ny, ct nz, ct nw) :
+    constexpr vector (ct nx, ct ny, ct nz, ct nw) :
       x (nx), y (ny), z (nz), w (nw)
     { }
   };
@@ -230,12 +230,12 @@ namespace Rk {
   using vector4 = vector <4, ct>;
 
   template <typename ct, typename... arg_ts>
-  auto make_vector_as (arg_ts... args) {
+  constexpr auto make_vector_as (arg_ts... args) {
     return vector <sizeof... (arg_ts), ct> { static_cast <ct> (args)... };
   }
 
   template <typename... arg_ts>
-  auto make_vector (arg_ts... args) {
+  constexpr auto make_vector (arg_ts... args) {
     return make_vector_as <std::common_type_t <arg_ts...>> (args...);
   }
 
