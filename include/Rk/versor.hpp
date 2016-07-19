@@ -63,18 +63,18 @@ namespace Rk {
   // Hamilton product
   template <typename lht, typename rht>
   auto operator * (versor <lht> lhs, versor <rht> rhs) {
-    return make_versor {
+    return make_versor (
       (lhs.w * rhs.w) - (lhs.x * rhs.x) - (lhs.y * rhs.y) - (lhs.z * rhs.z),
       (lhs.w * rhs.x) + (lhs.x * rhs.w) + (lhs.y * rhs.z) - (lhs.z * rhs.y),
       (lhs.w * rhs.y) - (lhs.x * rhs.z) + (lhs.y * rhs.w) + (lhs.z * rhs.x),
       (lhs.w * rhs.z) + (lhs.x * rhs.y) - (lhs.y * rhs.x) + (lhs.z * rhs.w)
-    };
+    );
   }
 
   // Scalar product
   template <typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
   auto operator * (versor <lht> lhs, rht rhs) {
-    return make_versor { lhs.w * rhs, lhs.x * rhs, lhs.y * rhs, lhs.z * rhs };
+    return make_versor (lhs.w * rhs, lhs.x * rhs, lhs.y * rhs, lhs.z * rhs);
   }
 
   template <typename lht, typename rht, typename = typename detail::scalar_en <lht>::type>
@@ -91,7 +91,7 @@ namespace Rk {
   // Sum
   template <typename lht, typename rht>
   auto operator + (versor <lht> lhs, versor <rht> rhs) {
-    return make_versor { lhs.w + rhs.w, lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z };
+    return make_versor (lhs.w + rhs.w, lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
   }
 
   template <typename lht, typename rht>
@@ -149,11 +149,11 @@ namespace Rk {
          wy = w * y,
          wz = w * z;
 
-    return matrix_rows {
-      make_vector { 1 - 2 * (yy + zz),   2 * (xy - wz),     2 * (xz + wy)   },
-      make_vector {   2 * (xy + wz),   1 - 2 * (xx + zz),   2 * (yz - wx)   },
-      make_vector {   2 * (xz - wy),     2 * (yz + wx),   1 - 2 * (xx + yy) }
-    };
+    return matrix_rows (
+      make_vector (1 - 2 * (yy + zz),   2 * (xy - wz),     2 * (xz + wy)  ),
+      make_vector (  2 * (xy + wz),   1 - 2 * (xx + zz),   2 * (yz - wx)  ),
+      make_vector (  2 * (xz - wy),     2 * (yz + wx),   1 - 2 * (xx + yy))
+    );
   }
 
   template <typename ct>
@@ -164,18 +164,18 @@ namespace Rk {
   // Linear Interpolation
   template <typename at, typename bt, typename tt>
   auto lerp (versor <at> a, versor <bt> b, tt t) {
-    return make_versor {
+    return make_versor (
       lerp (a.w, b.w, t),
       lerp (a.x, b.x, t),
       lerp (a.y, b.y, t),
       lerp (a.z, b.z, t)
-    };
+    );
   }
 
   // Rotate vector by versor
   template <typename ct, typename vt>
   auto conj (versor <ct> rot, vector3 <vt> vec) {
-    auto r = make_vector { rot.x, rot.y, rot.z };
+    auto r = make_vector (rot.x, rot.y, rot.z);
     auto t = 2 * cross (r, vec);
     return vec + rot.w * t + cross (r, t);
   }

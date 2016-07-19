@@ -37,7 +37,7 @@ namespace Rk {
 
     template <uint... idxs>
     auto col_impl (uint j, detail::idx_seq <idxs...>) const {
-      return make_vector { rows [idxs][j]... };
+      return make_vector (rows [idxs][j]...);
     }
 
   /*template <uint... idxs>
@@ -77,7 +77,7 @@ namespace Rk {
 
     matrix () = default;
 
-    template <uint n, typename ct, typename... cts>
+    template <typename ct, typename... cts>
     explicit matrix (vector <n, ct> first_row, vector <n, cts>... new_rows) :
       rows ({ static_cast <row_t> (first_row), static_cast <row_t> (new_rows)... })
     { }
@@ -152,12 +152,12 @@ namespace Rk {
   namespace detail {
     template <uint m, uint n, typename lht, typename rht, uint... idxs>
     auto mul_cvec_impl (const matrix <m, n, lht>& lhs, vector <n, rht> rhs, idx_seq <idxs...>) {
-      return make_vector { dot (lhs.row (idxs), rhs)... };
+      return make_vector (dot (lhs.row (idxs), rhs)...);
     }
 
     template <uint m, uint n, typename lht, typename rht, uint... idxs>
     auto mul_rvec_impl (vector <m, lht> lhs, const matrix <m, n, rht>& rhs, idx_seq <idxs...>) {
-      return make_vector { dot (lhs, rhs.col (idxs))... };
+      return make_vector (dot (lhs, rhs.col (idxs))...);
     }
   }
 
