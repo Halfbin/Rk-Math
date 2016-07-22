@@ -220,15 +220,6 @@ namespace Rk {
     { }
   };
 
-  template <typename ct>
-  using vector2 = vector <2, ct>;
-
-  template <typename ct>
-  using vector3 = vector <3, ct>;
-
-  template <typename ct>
-  using vector4 = vector <4, ct>;
-
   template <typename ct, typename... arg_ts>
   constexpr auto make_vector_as (arg_ts... args) {
     return vector <sizeof... (arg_ts), ct> { static_cast <ct> (args)... };
@@ -531,6 +522,24 @@ namespace Rk {
 
   // Convenience types
   namespace vector_types {
+    template <typename ct>
+    using vector2 = vector <2, ct>;
+
+    template <typename ct>
+    using vector3 = vector <3, ct>;
+
+    template <typename ct>
+    using vector4 = vector <4, ct>;
+
+    template <uint n>
+    using vectori = vector <n, int>;
+
+    template <uint n>
+    using vectorf = vector <n, float>;
+
+    template <uint n>
+    using vectord = vector <n, double>;
+
     typedef vector2 <int>    vector2i, vec2i, v2i;
     typedef vector2 <float>  vector2f, vec2f, v2f;
     typedef vector2 <double> vector2d, vec2d, v2d;
@@ -546,6 +555,7 @@ namespace Rk {
 }
 
 #ifndef RK_VECTOR_NO_GLOBAL
+using Rk::vector;
 using namespace Rk::vector_types;
 #endif
 
