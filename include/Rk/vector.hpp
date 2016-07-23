@@ -76,11 +76,11 @@ namespace Rk {
     typedef detail::make_idxs <0, n> zero_to_n_t;
     typedef detail::make_idxs <1, n> one_to_n_t;
 
-    static zero_to_n_t zero_to_n () {
+    static constexpr auto zero_to_n () {
       return zero_to_n_t ();
     }
 
-    static one_to_n_t one_to_n () {
+    static constexpr auto one_to_n () {
       return one_to_n_t ();
     }
 
@@ -229,6 +229,24 @@ namespace Rk {
   constexpr auto make_vector (arg_ts... args) {
     return make_vector_as <std::common_type_t <arg_ts...>> (args...);
   }
+
+  namespace detail {
+    template <uint n, typename ct, uint... idxs>
+    constexpr auto make_diagonal_impl (ct x, idx_seq <idxs...>) {
+      return make_vector (((void) idxs, x) ...);
+    }
+  }
+
+  template <uint n, typename ct>
+  constexpr auto make_diagonal (ct x) {
+    return detail::make_diagonal_impl <n> (x, vector <n, ct>::zero_to_n ());
+  }
+
+  template <uint n, typename ct>
+  static constexpr auto const ones_vector = make_diagonal<n, ct> (1);
+
+  template <uint n, typename ct>
+  static constexpr auto const zero_vector = make_diagonal<n, ct> (0);
 
   namespace detail {
     template <typename st, typename rt = void>
@@ -422,6 +440,54 @@ namespace Rk {
   template <uint n, typename lht, typename rht>
   auto& operator %= (vector <n, lht>& lhs, rht&& rhs) {
     return lhs = lhs % std::forward <rht> (rhs);
+  }
+
+  // Bitwise and
+  template <uint n, typename lht, typename rht>
+  auto operator & (vector <n, lht> lhs, vector <n, rht> rhs) {
+    return transform (std::bit_and <> (), lhs, rhs);
+  }
+
+  template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
+  auto operator & (vector <n, lht> lhs, rht rhs) {
+    return transform ([rhs] (lht x) { return x & rhs; }, lhs);
+  }
+
+  template <uint n, typename lht, typename rht>
+  auto& operator &= (vector <n, lht>& lhs, rht&& rhs) {
+    return lhs = lhs & std::forward <rht> (rhs);
+  }
+
+  // Bitwise or
+  template <uint n, typename lht, typename rht>
+  auto operator | (vector <n, lht> lhs, vector <n, rht> rhs) {
+    return transform (std::bit_or <> (), lhs, rhs);
+  }
+
+  template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
+  auto operator | (vector <n, lht> lhs, rht rhs) {
+    return transform ([rhs] (lht x) { return x | rhs; }, lhs);
+  }
+
+  template <uint n, typename lht, typename rht>
+  auto& operator |= (vector <n, lht>& lhs, rht&& rhs) {
+    return lhs = lhs | std::forward <rht> (rhs);
+  }
+
+  // Bitwise xor
+  template <uint n, typename lht, typename rht>
+  auto operator ^ (vector <n, lht> lhs, vector <n, rht> rhs) {
+    return transform (std::bit_xor <> (), lhs, rhs);
+  }
+
+  template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
+  auto operator ^ (vector <n, lht> lhs, rht rhs) {
+    return transform ([rhs] (lht x) { return x ^ rhs; }, lhs);
+  }
+
+  template <uint n, typename lht, typename rht>
+  auto& operator ^= (vector <n, lht>& lhs, rht&& rhs) {
+    return lhs = lhs ^ std::forward <rht> (rhs);
   }
 
   // Dot product
