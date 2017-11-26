@@ -18,7 +18,7 @@ namespace Rk {
   template <typename ct>
   auto translation (vector3 <ct> v) {
     auto result = matrix <4, 4, ct>::identity ();
-    result.set_column (3, compose_vector { v, 1 });
+    result.set_column (3, compose_vector (v, 1));
     return result;
   }
 
@@ -26,12 +26,12 @@ namespace Rk {
   auto affine (vector3 <ct> trn, versor <ct> rot) {
     auto rmat = to_matrix (rot);
 
-    return matrix_rows {
-      compose_vector { rmat.row (0), trn.x },
-      compose_vector { rmat.row (1), trn.y },
-      compose_vector { rmat.row (2), trn.z },
-      make_vector    {   0, 0, 0,      1   }
-    };
+    return matrix_rows (
+      compose_vector (rmat.row (0), trn.x),
+      compose_vector (rmat.row (1), trn.y),
+      compose_vector (rmat.row (2), trn.z),
+      make_vector    (  0, 0, 0,      1  )
+    );
   }
 
   template <typename ct>
@@ -43,12 +43,12 @@ namespace Rk {
          j =  rm.row (2),
          k = -rm.row (0);
 
-    return matrix_rows {
-      compose_vector {   i,   dot (i, np) },
-      compose_vector {   j,   dot (j, np) },
-      compose_vector {   k,   dot (k, np) },
-      make_vector    { 0,0,0,      1      }
-    };
+    return matrix_rows (
+      compose_vector (  i,   dot (i, np)),
+      compose_vector (  j,   dot (j, np)),
+      compose_vector (  k,   dot (k, np)),
+      make_vector    (0,0,0,      1     )
+    );
   }
 
   template <typename t>
@@ -61,21 +61,21 @@ namespace Rk {
       q   =  (zf + zn)  * nrd,
       qn  = 2 * zn * zf * nrd;
 
-    return matrix_rows {
-      make_vector { w, 0,  0,  0 },
-      make_vector { 0, h,  0,  0 },
-      make_vector { 0, 0,  q, qn },
-      make_vector { 0, 0, -1,  0 }
-    };
+    return matrix_rows (
+      make_vector (w, 0,  0,  0),
+      make_vector (0, h,  0,  0),
+      make_vector (0, 0,  q, qn),
+      make_vector (0, 0, -1,  0)
+    );
   }
 
   template <typename t>
   auto ui_to_clip (t w, t h) {
-    return matrix_rows {
-      make_vector { 2 / w,    0,   -1 },
-      make_vector {   0,   -2 / h,  1 },
-      make_vector {   0,      0,    1 }
-    };
+    return matrix_rows (
+      make_vector (2 / w,    0,   -1),
+      make_vector (  0,   -2 / h,  1),
+      make_vector (  0,      0,    1)
+    );
   }
 }
 
