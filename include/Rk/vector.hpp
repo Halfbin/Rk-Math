@@ -130,7 +130,7 @@ namespace Rk {
       components (other.components)
     { }
 
-    constexpr vector (nil_t) :
+    constexpr vector (Nil) :
       components { }
     { }
 
@@ -154,7 +154,7 @@ namespace Rk {
 
     constexpr vector () = default;
 
-    constexpr vector (nil_t) :
+    constexpr vector (Nil) :
       x (0), y (0)
     { }
 
@@ -180,7 +180,7 @@ namespace Rk {
 
     constexpr vector () = default;
 
-    constexpr vector (nil_t) :
+    constexpr vector (Nil) :
       x (0), y (0), z (0)
     { }
 
@@ -206,7 +206,7 @@ namespace Rk {
 
     constexpr vector () = default;
 
-    constexpr vector (nil_t) :
+    constexpr vector (Nil) :
       x (0), y (0), z (0), w (0)
     { }
 
