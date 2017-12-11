@@ -359,18 +359,18 @@ namespace Rk {
 
   // Comparison
   template <uint n, typename lht, typename rht>
-  bool operator == (vector <n, lht> lhs, vector <n, rht> rhs) {
+  bool constexpr operator == (vector <n, lht> lhs, vector <n, rht> rhs) {
     return inner (std::logical_and <> (), std::equal_to <> (), lhs, rhs);
   }
 
   template <uint n, typename lht, typename rht>
-  bool operator != (vector <n, lht> lhs, vector <n, rht> rhs) {
+  bool constexpr operator != (vector <n, lht> lhs, vector <n, rht> rhs) {
     return !(lhs == rhs);
   }
 
   // Addition
   template <uint n, typename lht, typename rht>
-  auto operator + (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr operator + (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::plus <> (), lhs, rhs);
   }
 
@@ -381,7 +381,7 @@ namespace Rk {
 
   // Subtraction
   template <uint n, typename lht, typename rht>
-  auto operator - (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr operator - (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::minus <> (), lhs, rhs);
   }
 
@@ -392,23 +392,23 @@ namespace Rk {
 
   // Negation
   template <uint n, typename ct>
-  auto operator - (vector <n, ct> v) {
+  auto constexpr operator - (vector <n, ct> v) {
     return transform (std::negate <> (), v);
   }
 
   // Multiplication
   template <uint n, typename lht, typename rht>
-  constexpr auto operator * (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr operator * (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::multiplies <> (), lhs, rhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
-  constexpr auto operator * (vector <n, lht> lhs, rht rhs) {
+  auto constexpr operator * (vector <n, lht> lhs, rht rhs) {
     return transform ([rhs] (lht x) { return x * rhs; }, lhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <lht>::type>
-  constexpr auto operator * (lht lhs, vector <n, rht> rhs) {
+  auto constexpr operator * (lht lhs, vector <n, rht> rhs) {
     return rhs * lhs;
   }
 
@@ -419,12 +419,12 @@ namespace Rk {
 
   // Division
   template <uint n, typename lht, typename rht>
-  auto operator / (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr operator / (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::divides <> (), lhs, rhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
-  auto operator / (vector <n, lht> lhs, rht rhs) {
+  auto constexpr operator / (vector <n, lht> lhs, rht rhs) {
     return transform ([rhs] (lht x) { return x / rhs; }, lhs);
   }
 
@@ -435,12 +435,12 @@ namespace Rk {
 
   // Modulo
   template <uint n, typename lht, typename rht>
-  auto operator % (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr operator % (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::modulus <> (), lhs, rhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
-  auto operator % (vector <n, lht> lhs, rht rhs) {
+  auto constexpr operator % (vector <n, lht> lhs, rht rhs) {
     return transform ([rhs] (lht x) { return x % rhs; }, lhs);
   }
 
@@ -451,12 +451,12 @@ namespace Rk {
 
   // Bitwise and
   template <uint n, typename lht, typename rht>
-  auto operator & (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr operator & (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::bit_and <> (), lhs, rhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
-  auto operator & (vector <n, lht> lhs, rht rhs) {
+  auto constexpr operator & (vector <n, lht> lhs, rht rhs) {
     return transform ([rhs] (lht x) { return x & rhs; }, lhs);
   }
 
@@ -467,12 +467,12 @@ namespace Rk {
 
   // Bitwise or
   template <uint n, typename lht, typename rht>
-  auto operator | (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr operator | (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::bit_or <> (), lhs, rhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
-  auto operator | (vector <n, lht> lhs, rht rhs) {
+  auto constexpr operator | (vector <n, lht> lhs, rht rhs) {
     return transform ([rhs] (lht x) { return x | rhs; }, lhs);
   }
 
@@ -483,12 +483,12 @@ namespace Rk {
 
   // Bitwise xor
   template <uint n, typename lht, typename rht>
-  auto operator ^ (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr operator ^ (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::bit_xor <> (), lhs, rhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
-  auto operator ^ (vector <n, lht> lhs, rht rhs) {
+  auto constexpr operator ^ (vector <n, lht> lhs, rht rhs) {
     return transform ([rhs] (lht x) { return x ^ rhs; }, lhs);
   }
 
@@ -499,34 +499,34 @@ namespace Rk {
 
   // Dot product
   template <uint n, typename lht, typename rht>
-  auto dot (vector <n, lht> lhs, vector <n, rht> rhs) {
+  auto constexpr dot (vector <n, lht> lhs, vector <n, rht> rhs) {
     return reduce (std::plus <> (), lhs * rhs);
   }
 
   // Length squared (faster than length; monotonic)
   template <uint n, typename ct>
-  auto abs2 (vector <n, ct> v) {
+  auto constexpr abs2 (vector <n, ct> v) {
     return dot (v, v);
   }
 
   template <uint n, typename ct>
-  auto length2 (vector <n, ct> v) {
+  auto constexpr length2 (vector <n, ct> v) {
     return abs2 (v);
   }
 
   // Length
   template <uint n, typename ct>
-  auto abs (vector <n, ct> v) {
+  auto constexpr abs (vector <n, ct> v) {
     return std::sqrt (abs2 (v));
   }
 
   template <uint n, typename ct>
-  auto length (vector <n, ct> v) {
+  auto constexpr length (vector <n, ct> v) {
     return abs (v);
   }
 
   template <uint n, typename ct>
-  auto unit (vector <n, ct> v) {
+  auto constexpr unit (vector <n, ct> v) {
     auto len = abs (v);
     if (len > 0)
       v *= 1 / len;
@@ -541,7 +541,7 @@ namespace Rk {
 
   // Cross product
   template <typename lht, typename rht>
-  auto cross (vector <3, lht> lhs, vector <3, rht> rhs) {
+  auto constexpr cross (vector <3, lht> lhs, vector <3, rht> rhs) {
     return make_vector (
       lhs.y * rhs.z - lhs.z * rhs.y,
       lhs.z * rhs.x - lhs.x * rhs.z,
@@ -558,12 +558,12 @@ namespace Rk {
   // Floor / Ceiling
   template <uint n, typename ct>
   auto floor (vector <n, ct> v) {
-    return transform ([] (ct x) {  return std::floor (x); }, v);
+    return transform ([] (ct x) { return std::floor (x); }, v);
   }
 
   template <uint n, typename ct>
   auto ceil (vector <n, ct> v) {
-    return transform ([] (ct x) {  return std::ceil (x); }, v);
+    return transform ([] (ct x) { return std::ceil (x); }, v);
   }
 
   // Swizzling

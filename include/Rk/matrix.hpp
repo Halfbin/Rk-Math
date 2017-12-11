@@ -52,8 +52,8 @@ namespace Rk {
     template <uint... idxs>
     auto set_col_impl (uint j, col_t v, detail::idx_seq <idxs...>) {
       typedef char sequence [m + 1];
-      sequence { 0,
-        (void (rows [idxs][j] = v [idxs]), 0)
+      sequence { '\0',
+        (void (rows [idxs][j] = v [idxs]), '\0')
         ...
       };
     }
