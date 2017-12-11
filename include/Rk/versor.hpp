@@ -24,7 +24,7 @@ namespace Rk {
 
     versor () = default;
 
-    versor (identity_t) :
+    versor (Identity) :
       w (1), x (0), y (0), z (0)
     { }
 

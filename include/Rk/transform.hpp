@@ -18,7 +18,7 @@ namespace Rk {
   template <typename ct>
   auto translation (vector3 <ct> v) {
     auto result = matrix <4, 4, ct>::identity ();
-    result.set_column (3, compose_vector (v, 1));
+    result.set_col (3, compose_vector (v, 1));
     return result;
   }
 

@@ -19,6 +19,7 @@
 #include <functional>
 #include <algorithm>
 #include <stdexcept>
+#include <cstdint>
 #include <array>
 #include <cmath>
 
@@ -60,8 +61,8 @@ namespace Rk {
     static_assert (!std::is_reference <ct>::value, "vector components must not be references");
     static_assert (std::is_scalar <ct>::value,     "vector components must be scalar");
 
-    self_t&       self ()       { return static_cast <self_t&>       (*this); }
-    const self_t& self () const { return static_cast <const self_t&> (*this); }
+    constexpr self_t&       self ()       { return static_cast <self_t&>       (*this); }
+    constexpr const self_t& self () const { return static_cast <const self_t&> (*this); }
 
   protected:
     typedef vector_facade facade_t;
@@ -84,8 +85,8 @@ namespace Rk {
       return one_to_n_t ();
     }
 
-    ct& operator [] (uint i)       { return self ().components [i]; }
-    ct  operator [] (uint i) const { return self ().components [i]; }
+    constexpr ct& operator [] (uint i)       { return self ().components [i]; }
+    constexpr ct  operator [] (uint i) const { return self ().components [i]; }
 
     ct& at (uint i) {
       if (i >= n) throw std::out_of_range ("vector index out-of-range");
@@ -110,10 +111,10 @@ namespace Rk {
     template <typename... sw_ts>
     auto swizzle (sw_ts&&... sws) const;
 
-    // template <typename... sw_ts>
-    // auto operator () (sw_ts&&... sws) const {
-    //   return swizzle (std::forward <sw_ts> (sws)...);
-    // }
+    template <typename... sw_ts>
+    auto operator () (sw_ts&&... sws) const {
+      return swizzle (std::forward <sw_ts> (sws)...);
+    }
   };
 
   template <uint n, typename ct>
@@ -155,16 +156,16 @@ namespace Rk {
     constexpr vector () = default;
 
     constexpr vector (Nil) :
-      x (0), y (0)
+      components {0, 0}
     { }
 
     template <typename t>
     constexpr vector (const vector <2, t>& other) :
-      x ((ct) other.x), y ((ct) other.y)
+      components { (ct) other[0], (ct) other[1] }
     { }
 
     constexpr vector (ct nx, ct ny) :
-      x (nx), y (ny)
+      components {nx, ny}
     { }
   };
 
@@ -181,16 +182,16 @@ namespace Rk {
     constexpr vector () = default;
 
     constexpr vector (Nil) :
-      x (0), y (0), z (0)
+      components {0, 0, 0}
     { }
 
     template <typename t>
     constexpr vector (const vector <3, t>& other) :
-      x ((ct) other.x), y ((ct) other.y), z ((ct) other.z)
+      components { (ct) other[0], (ct) other[1], (ct) other[2] }
     { }
 
     constexpr vector (ct nx, ct ny, ct nz) :
-      x (nx), y (ny), z (nz)
+      components { nx, ny, nz }
     { }
   };
 
@@ -207,16 +208,16 @@ namespace Rk {
     constexpr vector () = default;
 
     constexpr vector (Nil) :
-      x (0), y (0), z (0), w (0)
+      components {0, 0, 0, 0}
     { }
 
     template <typename t>
     constexpr vector (const vector <4, t>& other) :
-      x ((ct) other.x), y ((ct) other.y), z ((ct) other.z), w ((ct) other.w)
+      components { (ct) other[0], (ct) other[1], (ct) other[2], (ct) other[3] }
     { }
 
     constexpr vector (ct nx, ct ny, ct nz, ct nw) :
-      x (nx), y (ny), z (nz), w (nw)
+      components { nx, ny, nz, nw }
     { }
   };
 
@@ -238,7 +239,13 @@ namespace Rk {
   }
 
   template <uint n, typename ct>
+  [[deprecated ("prefer diag")]]
   constexpr auto make_diagonal (ct x) {
+    return detail::make_diagonal_impl <n> (x, vector <n, ct>::zero_to_n ());
+  }
+
+  template <uint n, typename ct>
+  constexpr auto diag (ct x) {
     return detail::make_diagonal_impl <n> (x, vector <n, ct>::zero_to_n ());
   }
 
@@ -303,12 +310,12 @@ namespace Rk {
   // Detail
   namespace detail {
     template <typename ft, uint n, typename lht, typename rht, uint... idxs>
-    auto transform_impl (ft f, vector <n, lht> lhs, vector <n, rht> rhs, idx_seq <idxs...>) {
+    constexpr auto transform_impl (ft f, vector <n, lht> lhs, vector <n, rht> rhs, idx_seq <idxs...>) {
       return make_vector (f (lhs [idxs], rhs [idxs]) ...);
     }
 
     template <typename ft, uint n, typename ct, uint... idxs>
-    auto transform_impl (ft f, vector <n, ct> v, idx_seq <idxs...>) {
+    constexpr auto transform_impl (ft f, vector <n, ct> v, idx_seq <idxs...>) {
       return make_vector (f (v [idxs]) ...);
     }
 
@@ -326,13 +333,13 @@ namespace Rk {
   }
 
   template <typename ft, uint n, typename lht, typename rht>
-  auto transform (ft f, vector <n, lht> lhs, vector <n, rht> rhs) {
+  constexpr auto transform (ft f, vector <n, lht> lhs, vector <n, rht> rhs) {
     using namespace detail;
     return transform_impl (f, lhs, rhs, lhs.zero_to_n ());
   }
 
   template <typename ft, uint n, typename ct>
-  auto transform (ft f, vector <n, ct> v) {
+  constexpr auto transform (ft f, vector <n, ct> v) {
     using namespace detail;
     return transform_impl (f, v, v.zero_to_n ());
   }
@@ -391,17 +398,17 @@ namespace Rk {
 
   // Multiplication
   template <uint n, typename lht, typename rht>
-  auto operator * (vector <n, lht> lhs, vector <n, rht> rhs) {
+  constexpr auto operator * (vector <n, lht> lhs, vector <n, rht> rhs) {
     return transform (std::multiplies <> (), lhs, rhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
-  auto operator * (vector <n, lht> lhs, rht rhs) {
+  constexpr auto operator * (vector <n, lht> lhs, rht rhs) {
     return transform ([rhs] (lht x) { return x * rhs; }, lhs);
   }
 
   template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <lht>::type>
-  auto operator * (lht lhs, vector <n, rht> rhs) {
+  constexpr auto operator * (lht lhs, vector <n, rht> rhs) {
     return rhs * lhs;
   }
 
@@ -597,24 +604,51 @@ namespace Rk {
     template <typename ct>
     using vector4 = vector <4, ct>;
 
-    template <uint n>
-    using vectori = vector <n, int>;
+    template<uint n> using vectori = vector<n, int>;
+    template<uint n> using vectorf = vector<n, float>;
+    template<uint n> using vectord = vector<n, double>;
+    template<uint n> using vectori8 = vector<n, int8_t>;
+    template<uint n> using vectori16 = vector<n, int16_t>;
+    template<uint n> using vectori32 = vector<n, int32_t>;
+    template<uint n> using vectoru8 = vector<n, uint8_t>;
+    template<uint n> using vectoru16 = vector<n, uint16_t>;
+    template<uint n> using vectoru32 = vector<n, uint32_t>;
 
-    template <uint n>
-    using vectorf = vector <n, float>;
+    typedef vector2<int>    vector2i, vec2i, v2i;
+    typedef vector3<int>    vector3i, vec3i, v3i;
+    typedef vector4<int>    vector4i, vec4i, v4i;
 
-    template <uint n>
-    using vectord = vector <n, double>;
+    typedef vector2<float>  vector2f, vec2f, v2f;
+    typedef vector3<float>  vector3f, vec3f, v3f;
+    typedef vector4<float>  vector4f, vec4f, v4f;
 
-    typedef vector2 <int>    vector2i, vec2i, v2i;
-    typedef vector2 <float>  vector2f, vec2f, v2f;
-    typedef vector2 <double> vector2d, vec2d, v2d;
-    typedef vector3 <int>    vector3i, vec3i, v3i;
-    typedef vector3 <float>  vector3f, vec3f, v3f;
-    typedef vector3 <double> vector3d, vec3d, v3d;
-    typedef vector4 <int>    vector4i, vec4i, v4i;
-    typedef vector4 <float>  vector4f, vec4f, v4f;
-    typedef vector4 <double> vector4d, vec4d, v4d;
+    typedef vector2<double> vector2d, vec2d, v2d;
+    typedef vector3<double> vector3d, vec3d, v3d;
+    typedef vector4<double> vector4d, vec4d, v4d;
+
+    typedef vector2<int8_t> vector2i8, vec2i8, v2i8;
+    typedef vector3<int8_t> vector3i8, vec3i8, v3i8;
+    typedef vector4<int8_t> vector4i8, vec4i8, v4i8;
+
+    typedef vector2<int16_t> vector2i16, vec2i16, v2i16;
+    typedef vector3<int16_t> vector3i16, vec3i16, v3i16;
+    typedef vector4<int16_t> vector4i16, vec4i16, v4i16;
+
+    typedef vector2<int32_t> vector2i32, vec2i32, v2i32;
+    typedef vector3<int32_t> vector3i32, vec3i32, v3i32;
+    typedef vector4<int32_t> vector4i32, vec4i32, v4i32;
+
+    typedef vector2<uint8_t> vector2u8, vec2u8, v2u8;
+    typedef vector3<uint8_t> vector3u8, vec3u8, v3u8;
+    typedef vector4<uint8_t> vector4u8, vec4u8, v4u8;
+
+    typedef vector2<uint16_t> vector2u16, vec2u16, v2u16;
+    typedef vector3<uint16_t> vector3u16, vec3u16, v3u16;
+    typedef vector4<uint16_t> vector4u16, vec4u16, v4u16;
+
+    typedef vector2<uint32_t> vector2u32, vec2u32, v2u32;
+    typedef vector3<uint32_t> vector3u32, vec3u32, v3u32;
+    typedef vector4<uint32_t> vector4u32, vec4u32, v4u32;
   }
 
   using namespace vector_types;

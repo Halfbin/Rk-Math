@@ -128,6 +128,10 @@ namespace Rk {
     void set_col (uint j, col_t v) {
       set_col_impl (j, v, zero_to_m ());
     }
+
+    et const* raw () const {
+      return (et const*) &rows;
+    }
   };
 
   template <uint n, typename... cts>
