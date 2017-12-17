@@ -497,6 +497,37 @@ namespace Rk {
     return lhs = lhs ^ std::forward <rht> (rhs);
   }
 
+  // Shift
+  template <uint n, typename lht, typename rht>
+  auto constexpr operator >> (vector <n, lht> lhs, vector <n, rht> rhs) {
+    return transform ([] (lht a, rht b) { return a >> b; }, lhs, rhs);
+  }
+
+  template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
+  auto constexpr operator >> (vector <n, lht> lhs, rht rhs) {
+    return transform ([rhs] (lht x) { return x >> rhs; }, lhs);
+  }
+
+  template <uint n, typename lht, typename rht>
+  auto& operator >>= (vector <n, lht>& lhs, rht&& rhs) {
+    return lhs = lhs >> std::forward <rht> (rhs);
+  }
+
+  template <uint n, typename lht, typename rht>
+  auto constexpr operator << (vector <n, lht> lhs, vector <n, rht> rhs) {
+    return transform ([] (lht a, rht b) { return a << b; }, lhs, rhs);
+  }
+
+  template <uint n, typename lht, typename rht, typename = typename detail::scalar_en <rht>::type>
+  auto constexpr operator << (vector <n, lht> lhs, rht rhs) {
+    return transform ([rhs] (lht x) { return x << rhs; }, lhs);
+  }
+
+  template <uint n, typename lht, typename rht>
+  auto& operator <<= (vector <n, lht>& lhs, rht&& rhs) {
+    return lhs = lhs << std::forward <rht> (rhs);
+  }
+
   // Dot product
   template <uint n, typename lht, typename rht>
   auto constexpr dot (vector <n, lht> lhs, vector <n, rht> rhs) {
@@ -566,15 +597,24 @@ namespace Rk {
     return transform ([] (ct x) { return std::ceil (x); }, v);
   }
 
+  // min / max
+  template <uint n, typename ct>
+  auto min (vector <n, ct> v) {
+    return reduce ([] (ct a, ct b) { return std::min (a, b); }, v);
+  }
+
+  template <uint n, typename ct>
+  auto max (vector <n, ct> v) {
+    return reduce ([] (ct a, ct b) { return std::max (a, b); }, v);
+  }
+
   // Swizzling
-  namespace vec_swiz { enum : uint { X = 0, Y, Z, W }; }
-  namespace col_swiz { enum : uint { R = 0, G, B, A }; }
-  namespace tex_swiz { enum : uint { S = 0, T, P, Q }; }
+  namespace xyzw_swiz { enum : uint { X = 0, Y, Z, W }; }
+  namespace rgba_swiz { enum : uint { R = 0, G, B, A }; }
+  namespace stpq_swiz { enum : uint { S = 0, T, P, Q }; }
 
   namespace swiz {
-    using namespace vec_swiz;
-    using namespace col_swiz;
-    using namespace tex_swiz;
+    using namespace xyzw_swiz;
   }
 
   template <uint n, typename ct, uint m, typename swt>
